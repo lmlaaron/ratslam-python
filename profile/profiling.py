@@ -26,6 +26,9 @@
 
 import cv2
 import numpy as np
+import sys
+import os.path
+sys.path.append("..")
 import ratslam
 
 '''
@@ -52,7 +55,7 @@ Use it with RunSnakeRun [1]_ and Line Profiler [2]_.
 '''
 
 def main():
-    data = r'D:\Bkp\ratslam\data\stlucia_testloop.avi'
+    data = r'/home/rose/stlucia_0to21000.avi'
 
     video = cv2.VideoCapture(data)
     slam = ratslam.Ratslam()

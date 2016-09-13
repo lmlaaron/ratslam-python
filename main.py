@@ -40,18 +40,23 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plot
 import mpl_toolkits.mplot3d.axes3d as p3
-
+import time
 import ratslam
+import numpy as np
 
 if __name__ == '__main__':
     # Change this line to open other movies
-    data = r'D:\Bkp\ratslam\data\stlucia_testloop.avi'
+    data = r'/home/rose/stlucia_testloop.avi'
+    data = r'/home/rose/stlucia_0to21000.avi'
+    #data = r'/home/rose/uqaxon5_0to25000.avi'
+    f = open(data+'.time','w')
 
     video = cv2.VideoCapture(data)
     slam = ratslam.Ratslam()
     
     loop = 0
     _, frame = video.read()
+    time_start = time.time()
     while True:
         loop += 1
 
@@ -59,9 +64,13 @@ if __name__ == '__main__':
         _, frame = video.read()
         if frame is None: break
 
+	time_start_digest = time.time()
         img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         slam.digest(img)
-        # ==========================================================
+	time_end_digest = time.time()
+	print "%f" % (time_end_digest - time_start_digest)
+        f.write(str(time_end_digest - time_start_digest)+'\n')
+	# ==========================================================
 
         # Plot each 50 frames
         if loop%50 != 0:
@@ -118,10 +127,16 @@ if __name__ == '__main__':
 
         plot.tight_layout()
         # plot.savefig('C:\\Users\\Renato\\Desktop\\results\\forgif\\' + '%04d.jpg'%loop)
-        plot.pause(0.1)
+        plot.pause(0.01)
         # ==========================================================
 
+    f.close()
     print 'DONE!'
     print 'n_ templates:', len(slam.view_cells.cells)
     print 'n_ experiences:', len(slam.experience_map.exps)
+    plot.show()
+    f = open(data+'.time','r')
+    x = np.genfromtxt(f) 
+    plot.plot(x)
+    plot.title("computation time per frame")
     plot.show()
