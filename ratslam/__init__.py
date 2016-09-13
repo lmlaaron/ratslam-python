@@ -45,7 +45,7 @@ from ratslam.visual_odometry import VisualOdometry
 from ratslam.view_cells import ViewCells
 from ratslam.pose_cells import PoseCells
 from ratslam.experience_map import ExperienceMap
-
+import time
 class Ratslam(object):
     '''Ratslam implementation.
 
@@ -54,13 +54,16 @@ class Ratslam(object):
     cells activation in order to plot them.
     '''
 
-    def __init__(self):
+    def __init__(self, data=None):
         '''Initializes the ratslam modules.'''
 
         self.visual_odometry = VisualOdometry()
         self.view_cells = ViewCells()
         self.pose_cells = PoseCells()
         self.experience_map = ExperienceMap()
+	self.f = open(data+'.profile','w')
+	self.f.write('total view_cell visual_odometry pose_cells experience_map\n')
+
 
         # TRACKING -------------------------------
         x, y, th = self.visual_odometry.odometry
@@ -77,12 +80,21 @@ class Ratslam(object):
         '''
 
         x_pc, y_pc, th_pc = self.pose_cells.active
-        view_cell = self.view_cells(img, x_pc, y_pc, th_pc)
-        vtrans, vrot = self.visual_odometry(img)
+        time_view_cells = time.time()
+	view_cell = self.view_cells(img, x_pc, y_pc, th_pc)
+        time_visual_odometry = time.time()
+	vtrans, vrot = self.visual_odometry(img)
+	time_pose_cells = time.time()
         x_pc, y_pc, th_pc = self.pose_cells(view_cell, vtrans, vrot)
-        self.experience_map(view_cell, vtrans, vrot, x_pc, y_pc, th_pc)
+        time_experience_map = time.time()
+	self.experience_map(view_cell, vtrans, vrot, x_pc, y_pc, th_pc)
+	time_all_done = time.time()
 
-        # TRACKING -------------------------------
+	print "%f %f %f %f %f" % ( (time_all_done - time_view_cells), (time_visual_odometry - time_view_cells), (time_pose_cells - time_visual_odometry), (time_experience_map - time_pose_cells), (time_all_done - time_experience_map) )
+
+	self.f.write(str(time_all_done - time_view_cells) + ' ' + str(time_visual_odometry - time_view_cells) + ' ' + str(time_pose_cells - time_visual_odometry) + ' ' + str(time_experience_map - time_pose_cells) + ' ' + str(time_all_done - time_experience_map) + '\n')
+       
+	# TRACKING -------------------------------
         x, y, th = self.visual_odometry.odometry
         self.odometry[0].append(x)
         self.odometry[1].append(y)

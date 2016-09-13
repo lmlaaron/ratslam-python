@@ -42,7 +42,6 @@ from matplotlib import pyplot as plot
 import mpl_toolkits.mplot3d.axes3d as p3
 import time
 import ratslam
-import numpy as np
 
 if __name__ == '__main__':
     # Change this line to open other movies
@@ -52,7 +51,7 @@ if __name__ == '__main__':
     f = open(data+'.time','w')
 
     video = cv2.VideoCapture(data)
-    slam = ratslam.Ratslam()
+    slam = ratslam.Ratslam(data)
     
     loop = 0
     _, frame = video.read()
@@ -66,9 +65,10 @@ if __name__ == '__main__':
 
 	time_start_digest = time.time()
         img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        slam.digest(img)
+	#img=cv2.resize(img,None,fx=0.125, fy=0.125, interpolation = cv2.INTER_AREA)	
+	slam.digest(img)
 	time_end_digest = time.time()
-	print "%f" % (time_end_digest - time_start_digest)
+	#print "%f" % (time_end_digest - time_start_digest)
         f.write(str(time_end_digest - time_start_digest)+'\n')
 	# ==========================================================
 
