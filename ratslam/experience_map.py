@@ -192,8 +192,13 @@ class ExperienceMap(object):
 
             delta_pcs = []
             n_candidate_matches = 0
-            for (i, e) in enumerate(view_cell.exps):
-                delta_pc = np.sqrt(
+            #for (i, e) in enumerate(view_cell.exps):
+            for i in range(0,50):
+		if len(view_cell.exps) - 1 - i < 0:
+		    break
+	        
+		e = view_cell.exps[len(view_cell.exps) - 1 - i]
+	        delta_pc = np.sqrt(
                     min_delta(e.x_pc, x_pc, PC_DIM_XY)**2 + \
                     min_delta(e.y_pc, y_pc, PC_DIM_XY)**2 + \
                     min_delta(e.th_pc, th_pc, PC_DIM_TH)**2
@@ -238,7 +243,12 @@ class ExperienceMap(object):
 
         # Iteratively update the experience map with the new information     
         for i in range(0, EXP_LOOPS):
-            for e0 in self.exps:
+            #for e0 in self.exps:
+	    for j in range(0, 50):
+		if len(self.exps) - j - 1 < 0:
+		    break
+	
+		e0 = self.exps[len(self.exps) - j - 1]
                 for l in e0.links:
                     # e0 is the experience under consideration
                     # e1 is an experience linked from e0

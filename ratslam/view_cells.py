@@ -81,8 +81,13 @@ class ViewCells(object):
         :return: 1D numpy array.
         '''
         scores = []
-        for cell in self.cells:
+	
+        #for cell in self.cells:
+	for i in range (0, 50):
+	    if len(self.cells) - i - 1 < 0:
+	    	break
 
+	    cell = self.cells[len(self.cells)- i - 1]
             cell.decay -= VT_GLOBAL_DECAY
             if cell.decay < 0:
                 cell.decay = 0
@@ -118,10 +123,10 @@ class ViewCells(object):
         template = self._create_template(img)
         scores = self._score(template)
 
-        # TO REMOVE
-        if scores:
-            self.activated_cells = np.array(self.cells)[np.array(scores)*template.size<VT_MATCH_THRESHOLD]
-        # ----
+        ## TO REMOVE
+        #if scores:
+        #    self.activated_cells = np.array(self.cells)[np.array(scores)*template.size<VT_MATCH_THRESHOLD]
+        ## ----
 
         if not self.size or np.min(scores)*template.size > VT_MATCH_THRESHOLD:
             cell = self.create_cell(template, x_pc, y_pc, th_pc)

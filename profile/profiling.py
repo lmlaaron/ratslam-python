@@ -55,7 +55,8 @@ Use it with RunSnakeRun [1]_ and Line Profiler [2]_.
 '''
 
 def main():
-    data = r'/home/rose/stlucia_0to21000.avi'
+    #data = r'/home/rose/stlucia_0to21000.avi'
+    data = r'/home/rose/stlucia_testloop.avi'
 
     video = cv2.VideoCapture(data)
     slam = ratslam.Ratslam()
@@ -73,7 +74,8 @@ def main():
         # break
 
         if loop%100 == 0: print '%0.2f%%'%(100*loop/1000.)
-
+	if loop == 10000: break
+		
 import cProfile
 command = """main()"""
 cProfile.runctx(command, globals(), locals(), filename="ratslam.profile" )

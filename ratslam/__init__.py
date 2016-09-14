@@ -72,7 +72,7 @@ class Ratslam(object):
         x_pc, y_pc, th_pc = self.pose_cells.active
         self.pc = [[x_pc], [y_pc], [th_pc]]
         # ----------------------------------------
-
+    
     def digest(self, img):
         '''Execute a step of ratslam algorithm for a given image.
 

@@ -76,7 +76,6 @@ def create_pc_weights(dim, var):
     weight = weight/np.sum(weight)
     return weight
 
-# @profile
 def compare_segments(seg1, seg2, slen):
     cwl = seg1.size
 
